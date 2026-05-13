@@ -187,53 +187,16 @@
         </div>
 
         <div class="sidebar-nav">
-            <div class="nav-category">Main Menu</div>
-            <div class="nav-item">
-                <a href="{{ route('admin.dashboard') }}" class="nav-link-custom {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-                    <i class="fa-solid fa-gauge-high"></i> Dashboard
-                </a>
-            </div>
-            <div class="nav-item">
-                <a href="{{ route('admin.bookings.index') }}" class="nav-link-custom {{ request()->routeIs('admin.bookings.*') ? 'active' : '' }}">
-                    <i class="fa-solid fa-calendar-check"></i> Reservations
-                </a>
-            </div>
-
-            <div class="nav-category">Inventory</div>
-            <div class="nav-item">
-                <a href="{{ route('admin.rooms.index') }}" class="nav-link-custom {{ request()->routeIs('admin.rooms.*') ? 'active' : '' }}">
-                    <i class="fa-solid fa-door-open"></i> Manage Rooms
-                </a>
-            </div>
-            <div class="nav-item">
-                <a href="{{ route('admin.amenities.index') }}" class="nav-link-custom {{ request()->routeIs('admin.amenities.*') ? 'active' : '' }}">
-                    <i class="fa-solid fa-sparkles"></i> Hotel Amenities
-                </a>
-            </div>
-            <div class="nav-item">
-                <a href="{{ route('admin.room-types.index') }}" class="nav-link-custom {{ request()->routeIs('admin.room-types.*') ? 'active' : '' }}">
-                    <i class="fa-solid fa-tags"></i> Room Types
-                </a>
-            </div>
-
-            <div class="nav-category">CRM & HR</div>
-            <div class="nav-item">
-                <a href="{{ route('admin.guests.index') }}" class="nav-link-custom {{ request()->routeIs('admin.guests.*') ? 'active' : '' }}">
-                    <i class="fa-solid fa-user-group"></i> Guest Database
-                </a>
-            </div>
-            <div class="nav-item">
-                <a href="{{ route('admin.staff.index') }}" class="nav-link-custom {{ request()->routeIs('admin.staff.*') ? 'active' : '' }}">
-                    <i class="fa-solid fa-user-tie"></i> Staff Management
-                </a>
-            </div>
-
-            <div class="nav-category">Settings</div>
-            <div class="nav-item">
-                <a href="{{ route('admin.hotels.index') }}" class="nav-link-custom {{ request()->routeIs('admin.hotels.*') ? 'active' : '' }}">
-                    <i class="fa-solid fa-sliders"></i> Property Settings
-                </a>
-            </div>
+            @foreach(\App\Helpers\HelperSidebar::getMenuItems() as $category)
+                <div class="nav-category">{{ $category['category'] }}</div>
+                @foreach($category['items'] as $item)
+                    <div class="nav-item">
+                        <a href="{{ route($item['route']) }}" class="nav-link-custom {{ \App\Helpers\HelperSidebar::isActive($item['active']) ? 'active' : '' }}">
+                            <i class="{{ $item['icon'] }}"></i> {{ $item['label'] }}
+                        </a>
+                    </div>
+                @endforeach
+            @endforeach
         </div>
 
         <div class="p-3 border-top border-white-5">

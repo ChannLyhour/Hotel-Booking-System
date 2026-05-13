@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\Admin\GuestController;
 use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\Admin\HotelAmenityController;
+use App\Http\Controllers\Admin\UserController;
 
 Auth::routes();
 
@@ -29,4 +30,11 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::resource('guests', GuestController::class);
     Route::resource('staff', StaffController::class);
     Route::resource('amenities', HotelAmenityController::class);
+
+    // User Management Routes
+    Route::get('users', [UserController::class, 'index'])->name('users.index');
+    Route::get('users/guests', [UserController::class, 'guests'])->name('users.guests');
+    Route::get('users/staff', [UserController::class, 'staff'])->name('users.staff');
+    Route::get('users/employees', [UserController::class, 'employees'])->name('users.employees');
+    Route::get('users/roles', [UserController::class, 'roles'])->name('users.roles');
 });
