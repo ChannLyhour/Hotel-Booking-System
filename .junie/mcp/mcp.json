@@ -1,0 +1,11 @@
+{
+    "mcpServers": {
+        "laravel-boost": {
+            "command": "C:\\wamp64\\bin\\php\\php8.2.29\\php.exe",
+            "args": [
+                "C:\\System-Laravel\\Hotel-Booking-System\\artisan",
+                "boost:mcp"
+            ]
+        }
+    }
+}
