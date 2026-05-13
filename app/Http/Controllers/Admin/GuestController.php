@@ -3,39 +3,63 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\GuestRequest;
-use App\Services\GuestService;
+use App\Models\Guest;
+use Illuminate\Http\Request;
 
 class GuestController extends Controller
 {
-    protected $guestService;
-
-    public function __construct(GuestService $guestService)
-    {
-        $this->guestService = $guestService;
-    }
-
     public function index()
     {
-        $guests = $this->guestService->getAllGuests();
-        return view('admin.guests.index', compact('guests'));
+        $guests = Guest::latest()->paginate(10);
+        return view('users.guests.index', compact('guests'));
     }
 
-    public function store(GuestRequest $request)
+    public function create()
     {
-        $this->guestService->createGuest($request->validated());
-        return redirect()->back()->with('success', 'Guest created successfully.');
+        return view('users.guests.create');
     }
 
-    public function update(GuestRequest $request, string $id)
+    public function store(Request $request)
     {
-        $this->guestService->updateGuest($id, $request->validated());
-        return redirect()->back()->with('success', 'Guest updated successfully.');
+        $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|email|unique:guests,email',
+            'phone' => 'required|string|max:20',
+        ]);
+
+        Guest::create($request->all());
+
+        return redirect()->route('admin.guests.index')->with('success', 'Guest registered successfully.');
     }
 
-    public function destroy(string $id)
+    public function show(Guest guest)
     {
-        $this->guestService->deleteGuest($id);
-        return redirect()->back()->with('success', 'Guest deleted successfully.');
+        return view('users.guests.show', compact('guest'));
+    }
+
+    public function edit(Guest guest)
+    {
+        return view('users.guests.edit', compact('guest'));
+    }
+
+    public function update(Request $request, Guest guest)
+    {
+        $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|email|unique:guests,email,' . $guest->id,
+            'phone' => 'required|string|max:20',
+        ]);
+
+        $guest->update($request->all());
+
+        return redirect()->route('admin.guests.index')->with('success', 'Guest updated successfully.');
+    }
+
+    public function destroy(Guest guest)
+    {
+        $guest->delete();
+        return redirect()->route('admin.guests.index')->with('success', 'Guest record deleted.');
     }
 }

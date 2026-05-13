@@ -3,39 +3,69 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StaffRequest;
-use App\Services\StaffService;
+use App\Models\Staff;
+use App\Models\Hotel;
+use App\Models\User;
+use Illuminate\Http\Request;
 
 class StaffController extends Controller
 {
-    protected $staffService;
-
-    public function __construct(StaffService $staffService)
-    {
-        $this->staffService = $staffService;
-    }
-
     public function index()
     {
-        $staff = $this->staffService->getAllStaff();
-        return view('admin.staff.index', compact('staff'));
+        $staff = Staff::with(['user', 'hotel'])->latest()->paginate(10);
+        return view('users.staff.index', compact('staff'));
     }
 
-    public function store(StaffRequest $request)
+    public function create()
     {
-        $this->staffService->createStaff($request->validated());
-        return redirect()->back()->with('success', 'Staff member created successfully.');
+        $hotels = Hotel::all();
+        $users = User::all(); // Simplified
+        return view('users.staff.create', compact('hotels', 'users'));
     }
 
-    public function update(StaffRequest $request, string $id)
+    public function store(Request $request)
     {
-        $this->staffService->updateStaff($id, $request->validated());
-        return redirect()->back()->with('success', 'Staff member updated successfully.');
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'hotel_id' => 'required|exists:hotels,id',
+            'department' => 'required|string',
+            'position' => 'required|string',
+        ]);
+
+        Staff::create($request->all());
+
+        return redirect()->route('admin.staff.index')->with('success', 'Staff member onboarded successfully.');
     }
 
-    public function destroy(string $id)
+    public function show(Staff $staff)
     {
-        $this->staffService->deleteStaff($id);
-        return redirect()->back()->with('success', 'Staff member deleted successfully.');
+        return view('users.staff.show', compact('staff'));
+    }
+
+    public function edit(Staff $staff)
+    {
+        $hotels = Hotel::all();
+        $users = User::all();
+        return view('users.staff.edit', compact('staff', 'hotels', 'users'));
+    }
+
+    public function update(Request $request, Staff $staff)
+    {
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'hotel_id' => 'required|exists:hotels,id',
+            'department' => 'required|string',
+            'position' => 'required|string',
+        ]);
+
+        $staff->update($request->all());
+
+        return redirect()->route('admin.staff.index')->with('success', 'Staff record updated.');
+    }
+
+    public function destroy(Staff $staff)
+    {
+        $staff->delete();
+        return redirect()->route('admin.staff.index')->with('success', 'Staff member removed.');
     }
 }

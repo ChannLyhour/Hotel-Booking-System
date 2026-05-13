@@ -21,13 +21,15 @@ class HelperSidebar
                         'label' => 'Dashboard',
                         'route' => 'admin.dashboard',
                         'icon' => 'fa-solid fa-gauge-high',
-                        'active' => 'admin.dashboard'
+                        'active' => 'admin.dashboard',
+                        'permission' => null // Always visible if logged in
                     ],
                     [
                         'label' => 'Reservations',
                         'route' => 'admin.bookings.index',
                         'icon' => 'fa-solid fa-calendar-check',
-                        'active' => 'admin.bookings.*'
+                        'active' => 'admin.bookings.*',
+                        'permission' => 'bookings:view'
                     ],
                 ]
             ],
@@ -38,19 +40,22 @@ class HelperSidebar
                         'label' => 'Manage Rooms',
                         'route' => 'admin.rooms.index',
                         'icon' => 'fa-solid fa-door-open',
-                        'active' => 'admin.rooms.*'
+                        'active' => 'admin.rooms.*',
+                        'permission' => 'rooms:view'
                     ],
                     [
                         'label' => 'Hotel Amenities',
                         'route' => 'admin.amenities.index',
                         'icon' => 'fa-solid fa-sparkles',
-                        'active' => 'admin.amenities.*'
+                        'active' => 'admin.amenities.*',
+                        'permission' => 'amenities:view'
                     ],
                     [
                         'label' => 'Room Types',
                         'route' => 'admin.room-types.index',
                         'icon' => 'fa-solid fa-tags',
-                        'active' => 'admin.room-types.*'
+                        'active' => 'admin.room-types.*',
+                        'permission' => 'rooms:view'
                     ],
                 ]
             ],
@@ -61,31 +66,36 @@ class HelperSidebar
                         'label' => 'All Users',
                         'route' => 'admin.users.index',
                         'icon' => 'fa-solid fa-users',
-                        'active' => 'admin/users' // Using URI pattern for some
+                        'active' => 'admin/users*',
+                        'permission' => 'users:view'
                     ],
                     [
                         'label' => 'Guest Records',
-                        'route' => 'admin.users.guests',
+                        'route' => 'admin.guests.index',
                         'icon' => 'fa-solid fa-hospital-user',
-                        'active' => 'admin/users/guests'
+                        'active' => 'admin/guests*',
+                        'permission' => 'guests:view'
                     ],
                     [
                         'label' => 'Staff Directory',
-                        'route' => 'admin.users.staff',
+                        'route' => 'admin.staff.index',
                         'icon' => 'fa-solid fa-user-tie',
-                        'active' => 'admin/users/staff'
+                        'active' => 'admin/staff*',
+                        'permission' => 'staff:view'
                     ],
                     [
                         'label' => 'Employees',
-                        'route' => 'admin.users.employees',
+                        'route' => 'admin.employees.index',
                         'icon' => 'fa-solid fa-people-group',
-                        'active' => 'admin/users/employees'
+                        'active' => 'admin/employees*',
+                        'permission' => 'staff:view'
                     ],
                     [
                         'label' => 'Roles & Permissions',
                         'route' => 'admin.users.roles',
                         'icon' => 'fa-solid fa-shield-halved',
-                        'active' => 'admin/users/roles'
+                        'active' => 'admin/users/roles*',
+                        'permission' => 'users:view'
                     ],
                 ]
             ],
@@ -96,7 +106,8 @@ class HelperSidebar
                         'label' => 'Property Settings',
                         'route' => 'admin.hotels.index',
                         'icon' => 'fa-solid fa-sliders',
-                        'active' => 'admin.hotels.*'
+                        'active' => 'admin.hotels.*',
+                        'permission' => 'hotels:view'
                     ],
                 ]
             ],
@@ -109,7 +120,7 @@ class HelperSidebar
     public static function isActive($pattern): bool
     {
         if (str_contains($pattern, '*')) {
-            return Request::routeIs($pattern);
+            return Request::is($pattern) || Request::routeIs($pattern);
         }
         
         return Request::is($pattern) || Request::routeIs($pattern);

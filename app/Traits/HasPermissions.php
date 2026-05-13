@@ -10,7 +10,7 @@ trait HasPermissions
      * Check if user has a specific permission.
      * Format: resource:action
      */
-    public function hasPermission(string $resource, string $action): bool
+    public function hasPermission(string $resource, ?string $action = null): bool
     {
         if (!$this->role) {
             return false;
@@ -22,7 +22,7 @@ trait HasPermissions
         }
 
         $permissions = $this->role->permissions_cache ?? [];
-        $permissionKey = "{$resource}:{$action}";
+        $permissionKey = $action ? "{$resource}:{$action}" : $resource;
 
         return in_array($permissionKey, $permissions);
     }

@@ -27,14 +27,18 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::resource('bookings', BookingController::class);
     Route::post('bookings/{booking}/cancel', [BookingController::class, 'cancel'])->name('bookings.cancel');
     
-    Route::resource('guests', GuestController::class);
-    Route::resource('staff', StaffController::class);
     Route::resource('amenities', HotelAmenityController::class);
 
     // User Management Routes
-    Route::get('users', [UserController::class, 'index'])->name('users.index');
-    Route::get('users/guests', [UserController::class, 'guests'])->name('users.guests');
-    Route::get('users/staff', [UserController::class, 'staff'])->name('users.staff');
-    Route::get('users/employees', [UserController::class, 'employees'])->name('users.employees');
     Route::get('users/roles', [UserController::class, 'roles'])->name('users.roles');
+    Route::get('users/roles/create', [UserController::class, 'createRole'])->name('users.roles.create');
+    Route::get('users/roles/{role}/edit', [UserController::class, 'editRole'])->name('users.roles.edit');
+    Route::post('users/roles', [UserController::class, 'storeRole'])->name('users.roles.store');
+    Route::put('users/roles/{role}', [UserController::class, 'updateRole'])->name('users.roles.update');
+    Route::delete('users/roles/{role}', [UserController::class, 'destroyRole'])->name('users.roles.destroy');
+
+    Route::resource('users', UserController::class);
+    Route::resource('guests', GuestController::class);
+    Route::resource('staff', StaffController::class);
+    Route::resource('employees', EmployeeController::class);
 });

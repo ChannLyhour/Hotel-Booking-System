@@ -7,10 +7,16 @@
             <h1 class="h3 mb-0 fw-bold text-dark">Hotel Staff</h1>
             <p class="text-muted small mb-0">Operational staff, assignments, and scheduling.</p>
         </div>
-        <button class="btn btn-primary px-4 rounded-pill shadow-sm">
+        <a href="{{ route('admin.staff.create') }}" class="btn btn-primary px-4 rounded-pill shadow-sm">
             <i class="fa-solid fa-user-plus me-2"></i> Onboard Staff
-        </button>
+        </a>
     </div>
+
+    @if(session('success'))
+        <div class="alert alert-success border-0 shadow-sm rounded-3 mb-4">
+            <i class="fa-solid fa-check-circle me-2"></i> {{ session('success') }}
+        </div>
+    @endif
 
     <x-card-table 
         title="Active Staff Directory" 
@@ -58,8 +64,15 @@
                 @endif
             </td>
             <td class="text-end pe-4">
-                <button class="btn btn-sm btn-light border px-2 shadow-none"><i class="fa-solid fa-pen-to-square"></i></button>
-                <button class="btn btn-sm btn-light border px-2 shadow-none text-danger"><i class="fa-solid fa-trash"></i></button>
+                <div class="d-flex justify-content-end gap-2">
+                    <a href="{{ route('admin.staff.show', $member->id) }}" class="btn btn-sm btn-light border px-2 shadow-none"><i class="fa-solid fa-circle-info text-primary"></i></a>
+                    <a href="{{ route('admin.staff.edit', $member->id) }}" class="btn btn-sm btn-light border px-2 shadow-none"><i class="fa-solid fa-pen-to-square"></i></a>
+                    <form action="{{ route('admin.staff.destroy', $member->id) }}" method="POST" class="delete-form d-inline">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-sm btn-light border px-2 shadow-none text-danger"><i class="fa-solid fa-trash"></i></button>
+                    </form>
+                </div>
             </td>
         </tr>
         @empty
@@ -69,6 +82,16 @@
         @endforelse
     </x-card-table>
 </div>
+
+<script>
+    document.querySelectorAll('.delete-form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            if(!confirm('Are you sure you want to delete this staff record?')) {
+                e.preventDefault();
+            }
+        });
+    });
+</script>
 
 <style>
     .bg-indigo-soft { background-color: rgba(99, 102, 241, 0.1); }

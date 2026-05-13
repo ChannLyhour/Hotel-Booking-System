@@ -7,7 +7,16 @@
             <h1 class="h3 mb-0 fw-bold text-dark">Employee Management</h1>
             <p class="text-muted small mb-0">Manage regular employees and team distributions.</p>
         </div>
+        <a href="{{ route('admin.employees.create') }}" class="btn btn-primary px-4 rounded-pill shadow-sm">
+            <i class="fa-solid fa-plus me-2"></i> Add Employee
+        </a>
     </div>
+
+    @if(session('success'))
+        <div class="alert alert-success border-0 shadow-sm rounded-3 mb-4">
+            <i class="fa-solid fa-check-circle me-2"></i> {{ session('success') }}
+        </div>
+    @endif
 
     <div class="row g-4 mb-4">
         @php
@@ -63,8 +72,15 @@
                 </div>
             </td>
             <td class="text-end pe-4">
-                <button class="btn btn-link text-primary p-0 me-3 text-decoration-none small fw-bold">Manage</button>
-                <button class="btn btn-sm btn-light rounded-circle shadow-none"><i class="fa-solid fa-ellipsis"></i></button>
+                <div class="d-flex justify-content-end gap-2">
+                    <a href="{{ route('admin.employees.show', $employee->id) }}" class="btn btn-sm btn-light border px-2 shadow-none"><i class="fa-solid fa-circle-info text-primary"></i></a>
+                    <a href="{{ route('admin.employees.edit', $employee->id) }}" class="btn btn-sm btn-light border px-2 shadow-none"><i class="fa-solid fa-pen-to-square"></i></a>
+                    <form action="{{ route('admin.employees.destroy', $employee->id) }}" method="POST" class="delete-form d-inline">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-sm btn-light border px-2 shadow-none text-danger"><i class="fa-solid fa-trash"></i></button>
+                    </form>
+                </div>
             </td>
         </tr>
         @empty
@@ -74,4 +90,14 @@
         @endforelse
     </x-card-table>
 </div>
+
+<script>
+    document.querySelectorAll('.delete-form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            if(!confirm('Are you sure you want to delete this employee record?')) {
+                e.preventDefault();
+            }
+        });
+    });
+</script>
 @endsection

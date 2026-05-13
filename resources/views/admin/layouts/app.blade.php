@@ -188,14 +188,22 @@
 
         <div class="sidebar-nav">
             @foreach(\App\Helpers\HelperSidebar::getMenuItems() as $category)
-                <div class="nav-category">{{ $category['category'] }}</div>
-                @foreach($category['items'] as $item)
-                    <div class="nav-item">
-                        <a href="{{ route($item['route']) }}" class="nav-link-custom {{ \App\Helpers\HelperSidebar::isActive($item['active']) ? 'active' : '' }}">
-                            <i class="{{ $item['icon'] }}"></i> {{ $item['label'] }}
-                        </a>
-                    </div>
-                @endforeach
+                @php
+                    $visibleItems = array_filter($category['items'], function($item) {
+                        return !$item['permission'] || auth()->user()->hasPermission($item['permission']);
+                    });
+                @endphp
+
+                @if(count($visibleItems) > 0)
+                    <div class="nav-category">{{ $category['category'] }}</div>
+                    @foreach($visibleItems as $item)
+                        <div class="nav-item">
+                            <a href="{{ route($item['route']) }}" class="nav-link-custom {{ \App\Helpers\HelperSidebar::isActive($item['active']) ? 'active' : '' }}">
+                                <i class="{{ $item['icon'] }}"></i> {{ $item['label'] }}
+                            </a>
+                        </div>
+                    @endforeach
+                @endif
             @endforeach
         </div>
 
