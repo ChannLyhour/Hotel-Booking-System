@@ -37,11 +37,7 @@
                 <div class="card border-0 shadow-sm rounded-4 p-4 mt-4 bg-danger-soft border-start border-danger border-4">
                     <h6 class="fw-bold text-danger mb-2">Danger Zone</h6>
                     <p class="x-small text-muted mb-3">Once you delete a role, it cannot be recovered. Ensure no users are assigned to this role before deletion.</p>
-                    <form action="{{ route('admin.users.roles.destroy', $role->id) }}" method="POST" class="delete-form">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-sm btn-outline-danger w-100 rounded-pill">Delete Role</button>
-                    </form>
+                    <button type="button" class="btn btn-sm btn-outline-danger w-100 rounded-pill" onclick="confirmDelete()">Delete Role</button>
                 </div>
             </div>
 
@@ -88,6 +84,11 @@
         </div>
     </form>
 </div>
+
+<form action="{{ route('admin.users.roles.destroy', $role->id) }}" method="POST" id="delete-role-form" class="d-none">
+    @csrf
+    @method('DELETE')
+</form>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -139,11 +140,11 @@
         }
 
         // Delete Confirmation
-        document.querySelector('.delete-form')?.addEventListener('submit', function(e) {
-            if (!confirm('Are you sure you want to delete this role? This action cannot be undone.')) {
-                e.preventDefault();
+        window.confirmDelete = function() {
+            if (confirm('Are you sure you want to delete this role? This action cannot be undone.')) {
+                document.getElementById('delete-role-form').submit();
             }
-        });
+        };
     });
 </script>
 

@@ -1,16 +1,17 @@
 <?php
 
+use App\Http\Controllers\Admin\BookingController;
+use App\Http\Controllers\Admin\EmployeeController;
+use App\Http\Controllers\Admin\GuestController;
+use App\Http\Controllers\Admin\HotelAmenityController;
+use App\Http\Controllers\Admin\HotelController;
+use App\Http\Controllers\Admin\RoomController;
+use App\Http\Controllers\Admin\RoomTypeController;
+use App\Http\Controllers\Admin\StaffController;
+use App\Http\Controllers\Admin\UserController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-
-use App\Http\Controllers\Admin\HotelController;
-use App\Http\Controllers\Admin\RoomTypeController;
-use App\Http\Controllers\Admin\RoomController;
-use App\Http\Controllers\Admin\BookingController;
-use App\Http\Controllers\Admin\GuestController;
-use App\Http\Controllers\Admin\StaffController;
-use App\Http\Controllers\Admin\HotelAmenityController;
-use App\Http\Controllers\Admin\UserController;
 
 Auth::routes();
 

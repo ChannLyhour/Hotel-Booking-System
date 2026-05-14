@@ -9,6 +9,21 @@ use Illuminate\Database\Eloquent\Model;
 class Permission extends Model
 {
     use HasFactory, HasUuid;
+    
+    /**
+     * Indicates if the IDs are auto-incrementing.
+     *
+     * @var bool
+     */
+    public $incrementing = false;
+
+    /**
+     * The data type of the primary key.
+     *
+     * @var string
+     */
+    protected $keyType = 'string';
+
 
     protected $fillable = [
         'role_id',

@@ -37,10 +37,25 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'id',
+        'first_name',
+        'last_name',
         'name',
         'email',
+        'phone',
         'password',
         'role_id',
+        'user_type',
+        'is_active',
+        'nationality',
+        'id_document_type',
+        'id_document_no',
+        'vip_tier',
+        'loyalty_points',
+        'preferences',
+        'hotel_id',
+        'department',
+        'position',
+        'work_schedule',
     ];
 
     /**
@@ -63,6 +78,9 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_active' => 'boolean',
+            'preferences' => 'array',
+            'work_schedule' => 'array',
         ];
     }
 
@@ -73,4 +91,29 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Role::class, 'role_id');
     }
+
+    /**
+     * Get the hotel associated with the staff member.
+     */
+    public function hotel()
+    {
+        return $this->belongsTo(Hotel::class, 'hotel_id');
+    }
+
+    /**
+     * Get bookings associated with the guest.
+     */
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class, 'guest_id');
+    }
+
+    /**
+     * Get documents associated with the guest.
+     */
+    public function documents()
+    {
+        return $this->hasMany(GuestDocument::class, 'guest_id');
+    }
 }
+

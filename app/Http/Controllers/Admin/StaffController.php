@@ -3,59 +3,73 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Staff;
-use App\Models\Hotel;
 use App\Models\User;
+use App\Models\Hotel;
+use App\Models\Role;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class StaffController extends Controller
 {
     public function index()
     {
-        $staff = Staff::with(['user', 'hotel'])->latest()->paginate(10);
+        $staff = User::where('user_type', 'staff')->with('hotel')->latest()->paginate(10);
         return view('users.staff.index', compact('staff'));
     }
 
     public function create()
     {
         $hotels = Hotel::all();
-        $users = User::all(); // Simplified
-        return view('users.staff.create', compact('hotels', 'users'));
+        $roles = Role::all();
+        return view('users.staff.create', compact('hotels', 'roles'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'user_id' => 'required|exists:users,id',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
             'hotel_id' => 'required|exists:hotels,id',
             'department' => 'required|string',
             'position' => 'required|string',
+            'role_id' => 'required|exists:roles,id',
         ]);
 
-        Staff::create($request->all());
+        $data = $request->all();
+        $data['user_type'] = 'staff';
+        $data['password'] = bcrypt(Str::random(12)); // Random password for new staff
+
+        User::create($data);
 
         return redirect()->route('admin.staff.index')->with('success', 'Staff member onboarded successfully.');
     }
 
-    public function show(Staff $staff)
+    public function show(User $staff)
     {
+        if ($staff->user_type !== 'staff') abort(404);
         return view('users.staff.show', compact('staff'));
     }
 
-    public function edit(Staff $staff)
+    public function edit(User $staff)
     {
+        if ($staff->user_type !== 'staff') abort(404);
+
         $hotels = Hotel::all();
-        $users = User::all();
-        return view('users.staff.edit', compact('staff', 'hotels', 'users'));
+        $roles = Role::all();
+        return view('users.staff.edit', compact('staff', 'hotels', 'roles'));
     }
 
-    public function update(Request $request, Staff $staff)
+    public function update(Request $request, User $staff)
     {
+        if ($staff->user_type !== 'staff') abort(404);
+
         $request->validate([
-            'user_id' => 'required|exists:users,id',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $staff->id,
             'hotel_id' => 'required|exists:hotels,id',
             'department' => 'required|string',
             'position' => 'required|string',
+            'role_id' => 'required|exists:roles,id',
         ]);
 
         $staff->update($request->all());
@@ -63,8 +77,10 @@ class StaffController extends Controller
         return redirect()->route('admin.staff.index')->with('success', 'Staff record updated.');
     }
 
-    public function destroy(Staff $staff)
+    public function destroy(User $staff)
     {
+        if ($staff->user_type !== 'staff') abort(404);
+
         $staff->delete();
         return redirect()->route('admin.staff.index')->with('success', 'Staff member removed.');
     }

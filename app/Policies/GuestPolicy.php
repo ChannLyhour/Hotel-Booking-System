@@ -3,7 +3,6 @@
 namespace App\Policies;
 
 use App\Models\User;
-use App\Models\Guest;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class GuestPolicy
@@ -12,33 +11,33 @@ class GuestPolicy
 
     public function before(User $user, $ability)
     {
-        if ($user->isSuperAdmin()) {
-            return true;
-        }
+        // if ($user->isSuperAdmin()) {
+        //     return true;
+        // }
     }
 
     public function viewAny(User $user)
     {
-        return $user->hasPermission('guests', 'view');
+        return $user->hasPermission('guests:view');
     }
 
-    public function view(User $user, Guest $guest)
+    public function view(User $user, User $guest)
     {
-        return $user->hasPermission('guests', 'view');
+        return $user->hasPermission('guests:view');
     }
 
     public function create(User $user)
     {
-        return $user->hasPermission('guests', 'create');
+        return $user->hasPermission('guests:create');
     }
 
-    public function update(User $user, Guest $guest)
+    public function update(User $user, User $guest)
     {
-        return $user->hasPermission('guests', 'update');
+        return $user->hasPermission('guests:update');
     }
 
-    public function delete(User $user, Guest $guest)
+    public function delete(User $user, User $guest)
     {
-        return $user->hasPermission('guests', 'delete');
+        return $user->hasPermission('guests:delete');
     }
 }

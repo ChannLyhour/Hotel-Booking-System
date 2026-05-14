@@ -3,7 +3,6 @@
 namespace App\Policies;
 
 use App\Models\User;
-use App\Models\Staff;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class StaffPolicy
@@ -12,33 +11,34 @@ class StaffPolicy
 
     public function before(User $user, $ability)
     {
-        if ($user->isSuperAdmin()) {
-            return true;
-        }
+        // if ($user->isSuperAdmin()) {
+        //     return true;
+        // }
     }
 
     public function viewAny(User $user)
     {
-        return $user->hasPermission('staff', 'view');
+        return $user->hasPermission('staff:view');
     }
 
-    public function view(User $user, Staff $staff)
+    public function view(User $user, User $staff)
     {
-        return $user->hasPermission('staff', 'view') || $user->id === $staff->user_id;
+        return $user->hasPermission('staff:view') || $user->id === $staff->id;
     }
 
     public function create(User $user)
     {
-        return $user->hasPermission('staff', 'create');
+        return $user->hasPermission('staff:create');
     }
 
-    public function update(User $user, Staff $staff)
+    public function update(User $user, User $staff)
     {
-        return $user->hasPermission('staff', 'update');
+        return $user->hasPermission('staff:update');
     }
 
-    public function delete(User $user, Staff $staff)
+    public function delete(User $user, User $staff)
     {
-        return $user->hasPermission('staff', 'delete');
+        return $user->hasPermission('staff:delete');
     }
 }
+

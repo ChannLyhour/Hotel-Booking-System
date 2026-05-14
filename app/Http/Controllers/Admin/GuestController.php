@@ -3,14 +3,15 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Guest;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class GuestController extends Controller
 {
     public function index()
     {
-        $guests = Guest::latest()->paginate(10);
+        $guests = User::where('user_type', 'guest')->latest()->paginate(10);
         return view('users.guests.index', compact('guests'));
     }
 
@@ -24,41 +25,62 @@ class GuestController extends Controller
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:guests,email',
+            'email' => 'required|email|unique:users,email',
             'phone' => 'required|string|max:20',
+            'id_document_type' => 'nullable|string|max:50',
+            'id_document_no' => 'nullable|string|max:50',
         ]);
 
-        Guest::create($request->all());
+        $data = $request->all();
+        $data['user_type'] = 'guest';
+        $data['name'] = $request->first_name . ' ' . $request->last_name;
+        $data['password'] = bcrypt(Str::random(16)); // Random password for guests
+
+        User::create($data);
 
         return redirect()->route('admin.guests.index')->with('success', 'Guest registered successfully.');
     }
 
-    public function show(Guest guest)
+    public function show(User $guest)
     {
+        if ($guest->user_type !== 'guest') abort(404);
+
+        $guest->load(['bookings', 'documents']);
         return view('users.guests.show', compact('guest'));
     }
 
-    public function edit(Guest guest)
+    public function edit(User $guest)
     {
+        if ($guest->user_type !== 'guest') abort(404);
+
         return view('users.guests.edit', compact('guest'));
     }
 
-    public function update(Request $request, Guest guest)
+    public function update(Request $request, User $guest)
     {
+        if ($guest->user_type !== 'guest') abort(404);
+
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:guests,email,' . $guest->id,
+            'email' => 'required|email|unique:users,email,' . $guest->id,
             'phone' => 'required|string|max:20',
+            'id_document_type' => 'nullable|string|max:50',
+            'id_document_no' => 'nullable|string|max:50',
         ]);
 
-        $guest->update($request->all());
+        $data = $request->all();
+        $data['name'] = $request->first_name . ' ' . $request->last_name;
+
+        $guest->update($data);
 
         return redirect()->route('admin.guests.index')->with('success', 'Guest updated successfully.');
     }
 
-    public function destroy(Guest guest)
+    public function destroy(User $guest)
     {
+        if ($guest->user_type !== 'guest') abort(404);
+
         $guest->delete();
         return redirect()->route('admin.guests.index')->with('success', 'Guest record deleted.');
     }

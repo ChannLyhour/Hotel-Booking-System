@@ -39,6 +39,7 @@ class HousekeepingTask extends Model
      */
     public function staff()
     {
-        return $this->belongsTo(Staff::class, 'assigned_to');
+        return $this->belongsTo(User::class, 'assigned_to');
     }
+
 }

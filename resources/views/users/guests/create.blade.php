@@ -3,7 +3,8 @@
 @section('content')
 <div class="container-fluid py-4">
     <div class="mb-4">
-        <a href="{{ route('admin.users.guests') }}" class="btn btn-sm btn-light border-0 rounded-pill px-3 mb-3">
+        <a href="{{ route('admin.guests.index') }}" class="btn btn-sm btn-light border-0 rounded-pill px-3 mb-3">
+
             <i class="fa-solid fa-arrow-left me-2"></i> Back to Guests
         </a>
         <h1 class="h3 mb-0 fw-bold text-dark">Register New Guest</h1>
@@ -34,6 +35,19 @@
                     <label class="form-label small fw-bold text-muted">Nationality</label>
                     <input type="text" name="nationality" class="form-control bg-light border-0 py-2 px-3 shadow-none" placeholder="American">
                 </div>
+                <div class="col-md-6">
+                    <label class="form-label small fw-bold text-muted">Document Type</label>
+                    <select name="id_document_type" class="form-select bg-light border-0 py-2 px-3 shadow-none">
+                        <option value="Passport">Passport</option>
+                        <option value="National ID">National ID</option>
+                        <option value="Driver License">Driver License</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label small fw-bold text-muted">Document Number</label>
+                    <input type="text" name="id_document_no" class="form-control bg-light border-0 py-2 px-3 shadow-none" placeholder="A12345678">
+                </div>
+
                 <div class="col-md-6">
                     <label class="form-label small fw-bold text-muted">VIP Tier</label>
                     <select name="vip_tier" class="form-select bg-light border-0 py-2 px-3 shadow-none">

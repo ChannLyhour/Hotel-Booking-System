@@ -35,16 +35,16 @@
         <tr>
             <td class="ps-4">
                 <div class="d-flex align-items-center">
-                    <img src="https://ui-avatars.com/api/?name={{ urlencode($member->user->name) }}&background=6366f1&color=fff" 
+                    <img src="https://ui-avatars.com/api/?name={{ urlencode($member->name) }}&background=6366f1&color=fff" 
                          class="rounded-circle me-3" style="width: 40px; height: 40px;">
                     <div>
-                        <div class="fw-bold text-dark">{{ $member->user->name }}</div>
-                        <div class="text-muted x-small">{{ $member->user->email }}</div>
+                        <div class="fw-bold text-dark">{{ $member->name }}</div>
+                        <div class="text-muted x-small">{{ $member->email }}</div>
                     </div>
                 </div>
             </td>
             <td>
-                <div class="text-dark small fw-medium">{{ $member->hotel->name }}</div>
+                <div class="text-dark small fw-medium">{{ $member->hotel->name ?? 'N/A' }}</div>
                 <div class="badge bg-light text-muted border-0 fw-normal" style="font-size: 0.7rem;">{{ $member->department }}</div>
             </td>
             <td>

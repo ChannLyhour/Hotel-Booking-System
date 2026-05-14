@@ -33,11 +33,13 @@ class RoomType extends Model
         'bed_type',
         'amenities',
         'description',
+        'images',
         'is_active',
     ];
 
     protected $casts = [
         'amenities' => 'array',
+        'images' => 'array',
         'is_active' => 'boolean',
     ];
 

@@ -13,14 +13,14 @@
     </div>
 
     @if(session('success'))
-        <div class="alert alert-success border-0 shadow-sm rounded-3 mb-4">
-            <i class="fa-solid fa-check-circle me-2"></i> {{ session('success') }}
-        </div>
+    <div class="alert alert-success border-0 shadow-sm rounded-3 mb-4">
+        <i class="fa-solid fa-check-circle me-2"></i> {{ session('success') }}
+    </div>
     @endif
 
     <div class="row g-4 mb-4">
         @php
-            $departments = ['Housekeeping', 'Front Desk', 'Maintenance', 'Security'];
+        $departments = ['Housekeeping', 'Front Desk', 'Maintenance', 'Security'];
         @endphp
         @foreach($departments as $dept)
         <div class="col-md-3">
@@ -36,14 +36,14 @@
         @endforeach
     </div>
 
-    <x-card-table 
-        title="Employee Directory" 
-        :search="true" 
+    <x-card-table
+        title="Employee Directory"
+        :search="true"
         :pagination="$employees">
-        
+
         <x-slot:headers>
             <th class="ps-4">Employee</th>
-            <th>Department</th>
+            <th>Department / Position</th>
             <th>Joined Date</th>
             <th>Schedule</th>
             <th class="text-end pe-4">Actions</th>
@@ -53,21 +53,24 @@
         <tr>
             <td class="ps-4">
                 <div class="d-flex align-items-center">
-                    <img src="https://ui-avatars.com/api/?name={{ urlencode($employee->user->name) }}&background=10b981&color=fff" 
-                         class="rounded-circle me-3" style="width: 40px; height: 40px;">
+                    <img src="https://ui-avatars.com/api/?name={{ urlencode($employee->name) }}&background=10b981&color=fff"
+                        class="rounded-circle me-3" style="width: 40px; height: 40px;">
                     <div>
-                        <div class="fw-bold text-dark">{{ $employee->user->name }}</div>
+                        <div class="fw-bold text-dark">{{ $employee->name }}</div>
                         <div class="text-muted x-small">EMP-{{ strtoupper(substr($employee->id, 0, 8)) }}</div>
                     </div>
                 </div>
             </td>
-            <td><span class="badge bg-light text-dark fw-medium border">{{ $employee->department }}</span></td>
+            <td>
+                <div class="text-dark small fw-medium">{{ $employee->department }}</div>
+                <div class="text-muted x-small">{{ $employee->position }}</div>
+            </td>
             <td><span class="small text-muted">{{ $employee->created_at->format('M d, Y') }}</span></td>
             <td>
                 <div class="d-flex gap-1">
                     @php $days = ['M', 'T', 'W', 'T', 'F']; @endphp
                     @foreach($days as $day)
-                        <span class="badge bg-primary-soft text-primary p-0 d-flex align-items-center justify-content-center rounded-circle" style="width: 20px; height: 20px; font-size: 0.6rem;">{{ $day }}</span>
+                    <span class="badge bg-primary-soft text-primary p-0 d-flex align-items-center justify-content-center rounded-circle" style="width: 20px; height: 20px; font-size: 0.6rem;">{{ $day }}</span>
                     @endforeach
                 </div>
             </td>
@@ -94,7 +97,7 @@
 <script>
     document.querySelectorAll('.delete-form').forEach(form => {
         form.addEventListener('submit', function(e) {
-            if(!confirm('Are you sure you want to delete this employee record?')) {
+            if (!confirm('Are you sure you want to delete this employee record?')) {
                 e.preventDefault();
             }
         });
